@@ -10,7 +10,7 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME	:= Game
+NAME	:= fractol
 CCC		:= cc
 CFLAGS	:= -Wextra -Wall -Werror -Wunreachable-code -Ofast
 LIBMLX	:= ./MLX42
@@ -19,7 +19,7 @@ HEADERS	:= -I ./include -I $(LIBMLX)/include
 LIBS	:= $(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm
 # SRCS	:= $(shell find ./src -iname "*.c")
 # SRCS	:= test.c
-SRCS	:= test2.c
+SRCS	:= testjulia.c
 OBJS	:= ${SRCS:.c=.o}
 
 all: libmlx $(NAME)

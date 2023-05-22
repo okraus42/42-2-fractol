@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   testjulia.c                                        :+:      :+:    :+:   */
+/*   testmandelbrot.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 15:35:23 by okraus            #+#    #+#             */
-/*   Updated: 2023/05/22 17:41:01 by okraus           ###   ########.fr       */
+/*   Updated: 2023/05/22 16:37:24 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ typedef struct data_s
 	long double	alpha; //final alpha
 	int			amag; //magnitude of alpha
 	int			afract;
+	long double	power;
 	long double	tmp[2];
 	long double	zxy[2];
 	long double	cxy[2];
@@ -101,36 +102,6 @@ union u_colour
     return (r << 24 | g << 16 | b << 8 | a);
 }*/
 
-void ft_colourize(void* param)
-{
-	union u_colour	test;
-
-	test.rgbai = 0x00000000;
-	test.srgba.blue = 0xff;
-	test.srgba.alpha = 0xff;
-
-	(void)param;
-	for (uint32_t i = 0; i < image->width; ++i)
-	{
-		//test.srgba.blue -= 16;
-		test.srgba.green += 8;
-		test.srgba.red = 0;
-
-		for (uint32_t y = 0; y < image->height; ++y)
-		{
-			test.srgba.red += 4;
-			//test.srgba.green += 2;
-			uint32_t colour = /*ft_pixel(
-				rand() % 0xFF, // R
-				rand() % 0xFF, // G
-				rand() % 0xFF, // B
-				rand() % 0xFF  // A
-			);*/
-			colour = test.rgbai;
-			mlx_put_pixel(image, i, y, colour);
-		}
-	}
-}
 void zoom(double xdelta, double ydelta, void* param)
 {
 	max_t*	max;
@@ -171,41 +142,6 @@ void zoom(double xdelta, double ydelta, void* param)
 
 }
 
-void ft_colourize2(void* max2)
-{
-	union u_colour	test;
-	int32_t	x;
-	int32_t	y;
-	int32_t	z;
-	max_t*	max;
-
-	max = max2;
-	test.rgbai = 0x00000000;
-	test.srgba.alpha = 0xff;
-	//printf("A1: %p | %d\n", &(max->data->z), max->data->z);
-	z = max->data->z;
-	mlx_get_mouse_pos(max->mlx, &x, &y);
-	//usleep(10);
-	//printf("A2: %p | %d\n", &(max->data->z), max->data->z);
-	test.srgba.green = 0x7f;
-	if (x >=0 && x <= 511 && y >=0 && y <= 511)
-	{
-		test.srgba.blue = (x / 2) % 256;
-		test.srgba.red = (y / 2) % 256;
-		test.srgba.green += z;
-	}
-	for (uint32_t i = 0; i < image->width; ++i)
-	{
-		//test.srgba.blue -= 16;
-		for (uint32_t j = 0; j < image->height; ++j)
-		{
-			//test.srgba.green += 2;
-			uint32_t colour = test.rgbai;
-			mlx_put_pixel(image, i, j, colour);
-		}
-	}
-}
-
 int ft_iter(max_t* max)
 {
 	int			iter;
@@ -221,24 +157,21 @@ int ft_iter(max_t* max)
     // iteration = 0
     // max_iteration = 1000
   
-    // while (zx * zx + zy * zy < R**2  AND  iteration < max_iteration) 
-    // {
-    //     xtemp = zx * zx - zy * zy
-    //     zy = 2 * zx * zy  + cy 
-    //     zx = xtemp + cx
-    
-    //     iteration = iteration + 1 
+// xtmp=(x*x+y*y)^(n/2)*cos(n*atan2(y,x)) + a
+// y=(x*x+y*y)^(n/2)*sin(n*atan2(y,x)) + b
+// x=xtmp
     // }
-	zx = max->data->zxy[0];
-	zy = max->data->zxy[1];
-	cx = max->data->cxy[0];
-	cy = max->data->cxy[1]; 
+	zx = 0;
+	zy = 0;
+	cx = 0;
+	cy = 0; 
 	iter = 0;
-	while (iter < max->data->iter && ((zx * zx) + (zy * zy)) < 4)
+	while (iter < max->data->iter && (cx + cy) <= 4)
 	{
-		max->data->temp = (zx * zx) - (zy * zy);
-		zy = 2 * (zx * zy) + cy;
-		zx = max->data->temp + cx;
+		zy = 2 * zx * zy + max->data->zxy[1];
+		zx = cx - cy + max->data->zxy[0];
+		cx = zx * zx;
+		cy = zy * zy;
 		iter++;
 	}
 	return (iter);
@@ -284,8 +217,8 @@ void ft_colourize3(void* max2)
 			//printf("%Lf, %Lf\n", max->data->xy[0], max->data->xy[1]);
 			iter = ft_iter(max);
 			test.srgba.blue = ((max->data->c + iter) * 16) % 256;
-			test.srgba.red = ((iter)) % 256;
-			test.srgba.green = ((iter / 16)) % 256;
+			test.srgba.red = ((iter) * 4) % 256;
+			//test.srgba.green = ((iter / 16)) % 256;
 			if (iter == max->data->iter)
 				test.rgbai = 0x000000ff;
 			//test.srgba.green = iter / 0xf0;
@@ -293,8 +226,8 @@ void ft_colourize3(void* max2)
 			mlx_put_pixel(image, i, j, colour);
 		}
 	}
-	max->data->cxy[0] = max->data->tmp[0] * cosl(max->data->alpha) - max->data->tmp[1] * sinl(max->data->alpha);
-	max->data->cxy[1] = max->data->tmp[1] * cosl(max->data->alpha) + max->data->tmp[0] * sinl(max->data->alpha);
+	// max->data->cxy[0] = max->data->tmp[0] * cosl(max->data->alpha) - max->data->tmp[1] * sinl(max->data->alpha);
+	// max->data->cxy[1] = max->data->tmp[1] * cosl(max->data->alpha) + max->data->tmp[0] * sinl(max->data->alpha);
 }
 
 /**
@@ -351,13 +284,14 @@ void ft_hook(void* param)
 		max->data->x0 += max->data->l * 16;
 	if (mlx_is_key_down(max->mlx, MLX_KEY_KP_DIVIDE))
 	{
-		if (max->data->afract < 67108864)
-			max->data->afract *= 2;
+		if (max->data->power > 0.1)
+			max->data->power -= 0.015625;
 	}
 	if (mlx_is_key_down(max->mlx,MLX_KEY_KP_MULTIPLY))
 	{
-		if (max->data->afract > 256)
-			max->data->afract /= 2;
+		if (max->data->power < 100)
+			max->data->power += 0.015625;
+		printf("%Lf\n", max->data->power);
 	}
 	if (mlx_is_key_down(max->mlx, MLX_KEY_KP_8))
 	{
@@ -402,18 +336,19 @@ int32_t main(int32_t argc, const char* argv[])
 	data->x = 0;
 	data->y = 0;
 	data->z = 1;
-	data->iter = 256;
+	data->iter = 8048;
 	data->c = 0;
+	data->power = 2;
 	data->l = 0.0078125;
 	data->x0 = -2;
 	data->y0 = -2;
 	data->amag = 0;
-	data->alp = M_PI / 65536;
-	data->afract = 65536;
+	data->alp = 0;
+	data->afract = 1;
 	data->alpha = data->alp * data->amag;
 	data->temp2 = 0;
-	data->cxy[0] = -0.4;
-	data->cxy[1] = +0.6;
+	data->cxy[0] = 0;
+	data->cxy[1] = 0;
 	data->temp = 0;
 	max->data = data;
 	(void)argc;

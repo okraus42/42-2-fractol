@@ -6,7 +6,7 @@
 #    By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/16 15:04:52 by okraus            #+#    #+#              #
-#    Updated: 2023/05/16 15:36:17 by okraus           ###   ########.fr        #
+#    Updated: 2023/05/22 17:41:14 by okraus           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ HEADERS	:= -I ./include -I $(LIBMLX)/include
 LIBS	:= $(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm
 # SRCS	:= $(shell find ./src -iname "*.c")
 # SRCS	:= test.c
-SRCS	:= testjulia.c
+SRCS	:= ft_fractol.c
 OBJS	:= ${SRCS:.c=.o}
 
 all: libmlx $(NAME)

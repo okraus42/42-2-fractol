@@ -6,63 +6,16 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 15:35:23 by okraus            #+#    #+#             */
-/*   Updated: 2023/05/22 16:59:24 by okraus           ###   ########.fr       */
+/*   Updated: 2023/06/16 12:36:06 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <math.h>
-#include "MLX42/include/MLX42/MLX42.h"
+#include "../header/fractol.h"
 
 #define WIDTH 512
 #define HEIGHT 512
 
 static mlx_image_t* image;
-
-
-typedef struct data_s
-{
-	int			x;
-	int			y;
-	int			z;
-	int			temp2;
-	int			iter;
-	int			c;
-	int			t; //type of fractal 1-Mandelbrot, 2-Julia, 3-Multibrot
-	long double	x0;
-	long double	y0;
-	long double	l;
-	long double	alp;	//default alp
-	long double	alpha; //final alpha
-	int			amag; //magnitude of alpha
-	int			afract;
-	long double	power;
-	long double	tmp[2];
-	long double	zxy[2];
-	long double	cxy[2];
-	long double	temp;
-} data_t;
-
-typedef struct max_s
-{
-	mlx_t*		mlx;
-	data_t*  	data;
-} max_t;
-
-union u_colour
-{
-	struct s_colour
-	{
-		unsigned char	alpha;
-		unsigned char	blue;
-		unsigned char	green;
-		unsigned char	red;
-	}	srgba;
-	int				rgbai;
-}	u_rgba;
 
 void zoom(double xdelta, double ydelta, void* param)
 {
@@ -227,7 +180,6 @@ void ft_hook(void* param)
 	{
 		if (max->data->power < 100)
 			max->data->power += 0.015625;
-		printf("Power set to: %Lf\n", max->data->power);
 	}
 	if (mlx_is_key_down(max->mlx, MLX_KEY_KP_8))
 	{
@@ -259,7 +211,12 @@ void ft_hook(void* param)
 
 // -----------------------------------------------------------------------------
 
-int32_t main(int32_t argc, const char* argv[])
+void	ft_fractol(max_t *max)
+{
+	(void)max;
+}
+
+int main(int argc, const char* argv[])
 {
 	mlx_t* mlx;
 	data_t	datat;

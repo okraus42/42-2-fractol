@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2023/06/17 12:20:36 by okraus           ###   ########.fr       */
+/*   Updated: 2023/06/17 13:33:16 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,9 @@
 
 // DEFINITIONS
 
+# define WIDTH 512
+# define HEIGHT 512
+
 // STRUCTURES
 // FRACTOL structure
 
@@ -58,16 +61,16 @@ typedef struct data_s
 	long double	zxy[2];
 	long double	cxy[2];
 	long double	temp;
-} data_t;
+}	t_data;
 
 typedef struct max_s
 {
 	mlx_t		*mlx;
-	data_t		*data;
+	t_data		*data;
 	mlx_image_t	*image;
-} max_t;
+}	t_max;
 
-union u_colour
+typedef union u_colour
 {
 	struct s_colour
 	{
@@ -77,7 +80,7 @@ union u_colour
 		unsigned char	red;
 	}	srgba;
 	int				rgbai;
-}	u_rgba;
+}	t_rgba;
 
 // PROTOTYPES
 

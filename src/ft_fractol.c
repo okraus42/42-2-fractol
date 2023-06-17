@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 15:35:23 by okraus            #+#    #+#             */
-/*   Updated: 2023/06/16 12:51:23 by okraus           ###   ########.fr       */
+/*   Updated: 2023/06/17 12:23:58 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 
 #define WIDTH 512
 #define HEIGHT 512
-
-static mlx_image_t* image;
 
 void zoom(double xdelta, double ydelta, void* param)
 {
@@ -137,9 +135,9 @@ void ft_colourize(void* max2)
 	y = -1;
 	z = max->data->z;
 		
-	for (uint32_t i = 0; i < image->width; ++i)
+	for (uint32_t i = 0; i < max->image->width; ++i)
 	{
-		for (uint32_t j = 0; j < image->height; ++j)
+		for (uint32_t j = 0; j < max->image->height; ++j)
 		{
 			max->data->zxy[0] = max->data->x0 + (max->data->l * i);
 			max->data->zxy[1] = max->data->y0 + (max->data->l * j);
@@ -150,7 +148,7 @@ void ft_colourize(void* max2)
 			if (iter == max->data->iter)
 				test.rgbai = 0x000000ff;
 			uint32_t colour = test.rgbai;
-			mlx_put_pixel(image, i, j, colour);
+			mlx_put_pixel(max->image, i, j, colour);
 		}
 	}
 }
@@ -209,21 +207,8 @@ void ft_hook(void* param)
 
 // -----------------------------------------------------------------------------
 
-void	ft_fractol(max_t *max)
+void	ft_init(data_t	*data)
 {
-	(void)max;
-}
-
-int main(int argc, const char* argv[])
-{
-	mlx_t* mlx;
-	data_t	datat;
-	max_t	maxt;
-	data_t*	data;
-	max_t*	max;
-
-	data = &datat;
-	max = &maxt;
 	data->x = 0;
 	data->y = 0;
 	data->z = 1;
@@ -241,9 +226,24 @@ int main(int argc, const char* argv[])
 	data->cxy[0] = 0;
 	data->cxy[1] = 0;
 	data->temp = 0;
+}
+
+int ft_fractol(void)
+{
+	mlx_t		*mlx;
+	data_t		datat;
+	max_t		maxt;
+	data_t		*data;
+	max_t		*max;
+	mlx_image_t	*image;
+
+	data = &datat;
+	ft_init(data);
+	max = &maxt;
+
+	image = NULL;
+	max->image = image;
 	max->data = data;
-	(void)argc;
-	(void)argv;
 
 	if (!(mlx = mlx_init(WIDTH, HEIGHT, "MLX42", true)))
 	{
@@ -251,13 +251,13 @@ int main(int argc, const char* argv[])
 		return(EXIT_FAILURE);
 	}
 	max->mlx = mlx;
-	if (!(image = mlx_new_image(mlx, 511, 511)))
+	if (!(max->image = mlx_new_image(mlx, 511, 511)))
 	{
 		mlx_close_window(mlx);
 		puts(mlx_strerror(mlx_errno));
 		return(EXIT_FAILURE);
 	}
-	if (mlx_image_to_window(mlx, image, 0, 0) == -1)
+	if (mlx_image_to_window(mlx, max->image, 0, 0) == -1)
 	{
 		mlx_close_window(mlx);
 		puts(mlx_strerror(mlx_errno));
@@ -272,4 +272,12 @@ int main(int argc, const char* argv[])
 	mlx_loop(mlx);
 	mlx_terminate(mlx);
 	return (EXIT_SUCCESS);
+}
+
+int	main(int argc, char *argv[])
+{
+	(void)argc;
+	(void)argv;
+	ft_fractol();
+	return (0);
 }

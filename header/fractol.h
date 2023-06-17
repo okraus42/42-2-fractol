@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2023/06/16 10:12:54 by okraus           ###   ########.fr       */
+/*   Updated: 2023/06/17 12:20:36 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,9 @@ typedef struct data_s
 
 typedef struct max_s
 {
-	mlx_t*		mlx;
-	data_t*  	data;
+	mlx_t		*mlx;
+	data_t		*data;
+	mlx_image_t	*image;
 } max_t;
 
 union u_colour

@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2023/06/17 13:33:16 by okraus           ###   ########.fr       */
+/*   Updated: 2023/06/26 17:44:54 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,29 @@
 // STRUCTURES
 // FRACTOL structure
 
+// typedef struct data_s
+// {
+// 	int			x;
+// 	int			y;
+// 	int			z;
+// 	int			temp2;
+// 	int			iter;
+// 	int			c;
+// 	int			t;		//type of fractal 1-Mandelbrot, 2-Julia, 3-Multibrot
+// 	long double	x0;
+// 	long double	y0;
+// 	long double	l;
+// 	long double	alp;	//default alp
+// 	long double	alpha;	//final alpha
+// 	int			amag;	//magnitude of alpha
+// 	int			afract;
+// 	long double	power;
+// 	long double	tmp[2];
+// 	long double	zxy[2];
+// 	long double	cxy[2];
+// 	long double	temp;
+// }	t_data;
+
 typedef struct data_s
 {
 	int			x;
@@ -48,13 +71,13 @@ typedef struct data_s
 	int			temp2;
 	int			iter;
 	int			c;
-	int			t; //type of fractal 1-Mandelbrot, 2-Julia, 3-Multibrot
+	int			t;
 	long double	x0;
 	long double	y0;
 	long double	l;
-	long double	alp;	//default alp
-	long double	alpha; //final alpha
-	int			amag; //magnitude of alpha
+	long double	alp;
+	long double	alpha;
+	int			amag;
 	int			afract;
 	long double	power;
 	long double	tmp[2];
@@ -85,5 +108,26 @@ typedef union u_colour
 // PROTOTYPES
 
 //	ft_draw
+void	zoom(double xdelta, double ydelta, void *param);
+//Mandelbrot
+int		ft_iter_1(t_max *max);
+//Julia
+int		ft_iter_2(t_max *max);
+//Multibrot
+int		ft_iter_3(t_max *max);
+int		ft_iter(t_max *max);
+
+//	ft_colours
+void	ft_colourize(void	*max2);
+
+//	ft_hook
+void	ft_hook(void *param);
+void	ft_hook2(t_max *max);
+void	ft_hook3(t_max *max);
+
+//	ft_init
+void	ft_init(t_data *data, int i);
+void	ft_init_2(t_data *data);
+void	ft_init_3(t_data *data);
 
 #endif

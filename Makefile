@@ -6,7 +6,7 @@
 #    By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/04 15:40:17 by okraus            #+#    #+#              #
-#    Updated: 2023/06/17 12:44:24 by okraus           ###   ########.fr        #
+#    Updated: 2023/06/26 17:45:48 by okraus           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -54,7 +54,11 @@ SRC_DIR		=	src/
 
 # Pipex functions
 
-SRC_S	=		ft_fractol
+SRC_S	=		ft_fractol \
+				ft_colours \
+				ft_draw \
+				ft_hook \
+				ft_init
 
 # Formating
 
@@ -103,6 +107,8 @@ announce:
 libmlx:
 				@cmake $(LIBMLX) $(CMFLAGS) -B $(LIBMLX)/build && make -C $(LIBMLX)/build -j4
 				@echo "$(GREEN)The <<$(REVERSE)MLX42$(NRM_FORMAT)$(GREEN)>> compiled!$(NRM_FORMAT)"
+				@$(PRINT2)
+				@$(PRINT1)
 				@$(ECHO)
 
 # COMPILATION
